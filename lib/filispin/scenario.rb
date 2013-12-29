@@ -8,11 +8,13 @@ module Filispin
       @operations = operations
     end
 
-    def run
-      puts "Running #{name} for it #{Thread.current[:iteration]} of user #{Thread.current[:user]}\n"
-      #@operations.each do |operation|
-      #  operation.run iteration, results
-      #end
+    def run(context)
+      puts "Running #{name} for it #{context[:iteration]} of user #{context[:user]}\n"
+
+      # TODO set scenario variables
+      @operations.each do |operation|
+        operation.run context
+      end
     end
 
   end

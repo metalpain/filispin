@@ -8,9 +8,14 @@ module Filispin
 
     def run
 
-      config.sessions.each do |session|
-        session.run
+      context = {}
+
+      # TODO fill context with configuration options
+
+      @config.sessions.each do |session|
+        session.run context
       end
+
     end
   end
 end

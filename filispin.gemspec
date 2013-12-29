@@ -22,4 +22,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rails', '~> 4.0.0'
 
   spec.add_dependency 'docile', '~> 1.1.1'
+  spec.add_dependency 'mechanize', '~> 2.7.2'
 end

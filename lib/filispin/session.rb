@@ -15,14 +15,14 @@ module Filispin
       @scenarios = scenarios
     end
 
-    def run
+    def run(context)
 
       threads = []
       #results.start
 
       @users.times do |user|
         thread = Thread.new(user) do |user|
-          run_session_for_user(user)
+          run_session_for_user(user, context)
         end
         threads << thread
       end
@@ -37,15 +37,19 @@ module Filispin
     protected
 
     # run each of the concurrent sessions
-    def run_session_for_user(user)
-      Thread.current[:user] = user
+    def run_session_for_user(user, context)
+
+      session_context = {}
+      session_context[:user] = user
+      session_context[:params] = {}
+      session_context[:browser] = Mechanize.new
 
       # TODO set session variables
 
       @iterations.times do |iteration|
-        Thread.current[:iteration] = iteration
+        session_context[:iteration] = iteration
         @scenarios.each do |scenario|
-          scenario.run
+          scenario.run session_context
         end
       end
     end
