@@ -2,21 +2,21 @@ require 'docile'
 
 module Filispin
   class Config
-    attr_reader :scenarios
+    attr_reader :sessions
 
     def initialize
-      @scenarios = []
+      @sessions = []
     end
 
-    def scenario(&block)
-      @scenarios << Docile.dsl_eval(ScenarioBuilder.new, &block).build
+    def session(name = nil, &block)
+      @sessions << Docile.dsl_eval(SessionBuilder.new(name), &block).build
     end
 
-    def self.load(scenarios)
+    def self.load(sessions)
 
       config = Config.new
 
-      scenarios.each do |file|
+      sessions.each do |file|
         config.instance_eval(File.read(file)) if File.exist?(file)
       end
 

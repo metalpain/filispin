@@ -1,8 +1,9 @@
 module Filispin
   class ScenarioBuilder
 
-    def initialize
+    def initialize(name = nil)
       @operations = []
+      @name = name
     end
 
     def get(url)
@@ -10,7 +11,7 @@ module Filispin
     end
 
     def build
-      Scenario.new @operations
+      Scenario.new @name, @operations
     end
 
   end

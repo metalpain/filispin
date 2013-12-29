@@ -1,10 +1,10 @@
 namespace :filispin do
 
 
-  desc 'Run all scenarios in performance directory'
+  desc 'Run all sessions in performance directory'
   task :run => :environment do
-    scenarios = Dir.glob('performance/scenarios/**.rb')
-    Filispin.run scenarios
+    sessions = Dir.glob('performance/sessions/**.rb')
+    Filispin.run sessions
   end
 
 end
