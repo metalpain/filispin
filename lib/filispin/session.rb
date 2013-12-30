@@ -19,23 +19,38 @@ module Filispin
 
     def run(context)
 
-      threads = []
-
-      results = initialize_results
-      progress = Progress.new results, context
-
       session_context = {}
-
       session_context[:options] = context[:options]
       # TODO fill global parameters
-      session_context[:results] = results
+
+      load = context[:options][:load]
+      unless load.is_a? Array
+        load = [load]
+      end
+
+      load.each do |load|
+        users = (@users * load).round
+        single_run session_context, users
+      end
+
+    end
+
+    protected
+
+    def single_run(context, users)
+
+      threads = []
+
+      results = initialize_results(@name, users, @scenarios)
+      progress = Progress.new results, context
+      context[:results] = results
 
       progress.start_report
       results.start
 
-      @users.times do |user|
+      users.times do |user|
         thread = Thread.new(user) do |user|
-          run_session_for_user(user, session_context)
+          run_session_for_user(user, context)
         end
         threads << thread
       end
@@ -48,11 +63,9 @@ module Filispin
       context[:results] << results
     end
 
-    protected
-
-    def initialize_results
-      results = SessionResults.new @name
-      @scenarios.each do |scenario|
+    def initialize_results(name, users, scenarios)
+      results = SessionResults.new name, users
+      scenarios.each do |scenario|
         results << ScenarioResults.new(scenario.name)
       end
       results

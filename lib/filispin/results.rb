@@ -16,10 +16,11 @@ module Filispin
   class SessionResults
     include Stats
 
-    attr_reader :name, :scenario_results
+    attr_reader :name, :users, :scenario_results
 
-    def initialize(name)
+    def initialize(name, users)
       @name = name
+      @users = users
       @scenario_results = {}
     end
 
@@ -51,21 +52,29 @@ module Filispin
       @scenario_results.values.map(&:response_times).flatten
     end
 
+    def errors
+      @scenario_results.values.map(&:errors).reduce(:+)
+    end
   end
 
   class ScenarioResults
     include Stats
 
-    attr_reader :name, :response_times
+    attr_reader :name, :response_times, :errors
 
     def initialize(name)
       @name = name
       @response_times = []
+      @errors = 0
       @mutex = Mutex.new
     end
 
-    def add(method, uri, time, page = nil)
+    def success(method, uri, time, page = nil)
       @mutex.synchronize { @response_times << time }
+    end
+
+    def error(method, uri)
+      @mutex.synchronize { @errors += 1 }
     end
 
   end

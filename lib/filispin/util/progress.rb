@@ -32,8 +32,8 @@ module Filispin
     end
 
     def print
-      printf bold(invert(" %-79.79s\n")), @results.name
-      printf underline("%-20.20s%12.12s%12.12s%12.12s%12.12s%12.12s\n"), 'scenario', '# req', 'max', 'min', 'avg', 'median'
+      printf bold(invert(" Session: %-55.55s    Users: %3d \n")), @results.name, @results.users
+      printf underline("%-20.20s%12.12s%12.12s%12.12s%12.12s%12.12s\n"), 'scenario', 'req', 'max', 'min', 'avg', 'median'
       @results.scenario_results.values.each do |scenario|
         printf '%-20.20s', scenario.name
         print_results_line scenario
@@ -44,8 +44,9 @@ module Filispin
       printf "\n"
 
       printf "Elapsed: %3d s. | ", @results.elapsed
-      printf "Req: # %5d | ", @results.number_of_requests
-      printf "Throughput: %.2f req./s.", @results.throughput
+      printf "Req: %5d | ", @results.number_of_requests
+      printf "Throughput: %.2f req./s. | ", @results.throughput
+      printf "Errors: %5d | ", @results.errors
       printf "\n"
       printf "\n"
     end

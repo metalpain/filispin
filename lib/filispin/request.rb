@@ -21,7 +21,15 @@ module Filispin
       # think before request
       sleep(options[:think_time]) if options[:think_time]
 
-      case @method
+      # perform request
+      request @method, browser, url, parameters, context[:results]
+    end
+
+    protected
+
+    def request(method, browser, url, parameters, results)
+
+      case method
         when :get
           time = get(browser, url)
         when :post
@@ -31,11 +39,10 @@ module Filispin
       end
 
       # collect results
-      results = context[:results]
-      results.add @method, url, time, browser.current_page
+      results.success method, url, time, browser.current_page
+    rescue
+      results.error method, url
     end
-
-    protected
 
     def get(browser, url)
       time { browser.get url }
