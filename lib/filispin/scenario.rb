@@ -9,12 +9,12 @@ module Filispin
     end
 
     def run(context)
-      puts "Running #{name} for it #{context[:iteration]} of user #{context[:user]}\n"
 
       # TODO set scenario variables
       local_context = {}
       local_context[:results] = context[:results].scenario_results[@name]
       local_context[:browser] = context[:browser]
+      local_context[:options] = context[:options]
 
       @operations.each do |operation|
         operation.run local_context

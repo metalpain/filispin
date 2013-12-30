@@ -15,7 +15,7 @@ module Filispin
     def run(context)
       browser = context[:browser]
       parameters = process @parameters
-      url = interpolate @url, parameters
+      url = url(@url, parameters, context[:options])
 
       case @method
         when :get
@@ -50,6 +50,15 @@ module Filispin
     def authenticity_token(page)
       input = page.at("input[@name='authenticity_token']")
       input.nil? ? nil : input['value']
+    end
+
+    def url(url, parameters, options)
+      if url[0] == '/'
+        path = interpolate url, parameters
+        "#{options[:host]}#{path}"
+      else
+        interpolate @url, parameters
+      end
     end
 
     def process(parameters)

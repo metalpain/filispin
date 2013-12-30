@@ -11,12 +11,13 @@ module Filispin
   autoload :Session, File.dirname(__FILE__) + '/filispin/session'
   autoload :Timer, File.dirname(__FILE__) + '/filispin/timer'
   autoload :AuthScenarioBuilder, File.dirname(__FILE__) + '/filispin/dsl/auth_scenario_builder'
+  autoload :GlobalConfig, File.dirname(__FILE__) + '/filispin/dsl/global_config'
   autoload :ScenarioBuilder, File.dirname(__FILE__) + '/filispin/dsl/scenario_builder'
   autoload :SessionBuilder, File.dirname(__FILE__) + '/filispin/dsl/session_builder'
 
 
-  def self.run(sessions)
-    config = Config.load sessions
+  def self.run(files)
+    config = Config.load files
     Runner.new(config).run
   end
 

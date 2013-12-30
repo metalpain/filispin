@@ -24,6 +24,8 @@ module Filispin
       results = initialize_results
 
       session_context = {}
+
+      session_context[:options] = context[:options]
       # TODO fill global parameters
       session_context[:results] = results
 
@@ -57,6 +59,7 @@ module Filispin
 
       local_context = {}
       local_context[:results] = context[:results]
+      local_context[:options] = context[:options]
       local_context[:user] = user
       local_context[:params] = {}
       local_context[:browser] = Mechanize.new

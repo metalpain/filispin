@@ -10,7 +10,8 @@ module Filispin
 
       context = {}
 
-      # TODO fill context with configuration options
+      context[:options] = @config.options
+
       results = Results.new
       context[:results] = results
 
@@ -19,8 +20,6 @@ module Filispin
       end
 
       results.print
-
-
     end
   end
 end

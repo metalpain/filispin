@@ -2,21 +2,25 @@ require 'docile'
 
 module Filispin
   class Config
-    attr_reader :sessions
+    attr_reader :options, :sessions
 
     def initialize
       @sessions = []
+    end
+
+    def configuration(&block)
+      @options = Docile.dsl_eval(GlobalConfig.new, &block).options
     end
 
     def session(name, &block)
       @sessions << Docile.dsl_eval(SessionBuilder.new(name), &block).build
     end
 
-    def self.load(sessions)
+    def self.load(files)
 
       config = Config.new
 
-      sessions.each do |file|
+      files.each do |file|
         config.instance_eval(File.read(file)) if File.exist?(file)
       end
 
