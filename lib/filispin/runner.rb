@@ -18,7 +18,7 @@ module Filispin
         session.run context
       end
 
-      results.print
+      #results.print
     end
   end
 end

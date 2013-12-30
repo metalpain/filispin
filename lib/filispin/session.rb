@@ -22,6 +22,7 @@ module Filispin
       threads = []
 
       results = initialize_results
+      progress = Progress.new results, context
 
       session_context = {}
 
@@ -29,6 +30,7 @@ module Filispin
       # TODO fill global parameters
       session_context[:results] = results
 
+      progress.start_report
       results.start
 
       @users.times do |user|
@@ -41,6 +43,8 @@ module Filispin
       threads.each { |t| t.join }
 
       results.finish
+      progress.finish_report
+
       context[:results] << results
     end
 
