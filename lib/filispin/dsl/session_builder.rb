@@ -16,9 +16,18 @@ module Filispin
       @iterations = iterations
     end
 
-    def scenario(name = nil, &block)
+    def scenario(name, &block)
       if block
         @scenarios << Docile.dsl_eval(ScenarioBuilder.new(name), &block).build
+      else
+        # TODO use already defined scenario
+        raise 'unsupported'
+      end
+    end
+
+    def auth(&block)
+      if block
+        @scenarios << Docile.dsl_eval(AuthScenarioBuilder.new('auth'), &block).build
       else
         # TODO use already defined scenario
         raise 'unsupported'

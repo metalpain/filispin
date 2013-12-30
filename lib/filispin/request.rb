@@ -15,13 +15,13 @@ module Filispin
     def run(context)
       browser = context[:browser]
       url = @url
-      #parameters = @parameters
+      parameters = process @parameters
 
       case @method
         when :get
           time = get(browser, url)
         when :post
-          time = post(browser, url, {})
+          time = post(browser, url, parameters)
         else
           raise 'unknown method'
       end
@@ -44,7 +44,7 @@ module Filispin
         parameters[:authenticity_token] = token if token
       end
 
-      time { browser.post url, parameters }
+      time { browser.post url, to_post_query(parameters) }
     end
 
     def authenticity_token(page)
@@ -52,6 +52,25 @@ module Filispin
       input.nil? ? nil : input['value']
     end
 
+    def process(parameters)
+      if parameters.is_a? Proc
+        parameters.call
+      else
+        parameters
+      end
+    end
 
+    def to_post_query(parameters, prefix = nil)
+      params = {}
+      parameters.each_pair do |key, value|
+        attribute_name = prefix ? "#{prefix}[#{key}]" : key.to_s
+        if value.is_a? Hash
+          params.merge! to_post_query(value, attribute_name)
+        else
+          params[attribute_name] = value
+        end
+      end
+      params
+    end
   end
 end

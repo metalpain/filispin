@@ -8,7 +8,7 @@ module Filispin
       @sessions = []
     end
 
-    def session(name = nil, &block)
+    def session(name, &block)
       @sessions << Docile.dsl_eval(SessionBuilder.new(name), &block).build
     end
 
