@@ -5,6 +5,9 @@ module Filispin
     def initialize(results, context)
       @results = results
       @context = context
+
+      @fast_response = context[:options][:response_threshold][:fast]
+      @slow_response = context[:options][:response_threshold][:slow]
     end
 
     def start_report
@@ -58,7 +61,15 @@ module Filispin
     def print_req_time(segs)
       if segs
         ms = segs * 1000
-        printf '%8.0f ms.', ms
+        if segs < @fast_response
+          format = green('%8.0f ms.')
+        elsif segs < @slow_response
+          format = yellow('%8.0f ms.')
+        else
+          format = red('%8.0f ms.')
+        end
+
+        printf format, ms
       else
         printf('%12s', '-')
       end

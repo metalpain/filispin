@@ -12,5 +12,17 @@ module Filispin
     def underline(str)
       "\e[4m#{str}\e[24m"
     end
+
+    def red(str)
+      "\e[31m#{str}\e[39m"
+    end
+
+    def yellow(str)
+      "\e[33m#{str}\e[39m"
+    end
+
+    def green(str)
+      "\e[32m#{str}\e[39m"
+    end
   end
 end
