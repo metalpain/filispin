@@ -14,8 +14,8 @@ module Filispin
 
     def run(context)
       browser = context[:browser]
-      url = @url
       parameters = process @parameters
+      url = interpolate @url, parameters
 
       case @method
         when :get
@@ -58,6 +58,14 @@ module Filispin
       else
         parameters
       end
+    end
+
+    def interpolate(string, params)
+      str = string.dup
+      str.scan(/:[A-Za-z_]\w+/).each do |m|
+        str.gsub!(m, params[m.gsub(/:/, '').to_sym].to_s)
+      end
+      str
     end
 
     def to_post_query(parameters, prefix = nil)

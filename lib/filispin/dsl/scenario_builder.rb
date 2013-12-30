@@ -6,8 +6,8 @@ module Filispin
       @name = name
     end
 
-    def get(url)
-      @operations << Request.new(:get, url)
+    def get(url, &block)
+      @operations << Request.new(:get, url,  block || {})
     end
 
     def post(url, params = nil, &block)
