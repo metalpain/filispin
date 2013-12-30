@@ -46,7 +46,12 @@ module Filispin
     protected
 
     def req_time(segs)
-      sprintf '%f ms.', (segs*1000)
+      ms = segs * 1000
+      if ms > 500
+        sprintf "\033[31m%f ms.\033[0m", ms
+      else
+        sprintf '%f ms.', ms
+      end
     end
 
     def throughput(req_per_sec)

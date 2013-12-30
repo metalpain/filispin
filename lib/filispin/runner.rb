@@ -7,7 +7,6 @@ module Filispin
     end
 
     def run
-
       context = {}
 
       context[:options] = @config.options
