@@ -23,4 +23,5 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'docile', '~> 1.1.1'
   spec.add_dependency 'mechanize', '~> 2.7.2'
+  spec.add_dependency 'terminal-table'
 end

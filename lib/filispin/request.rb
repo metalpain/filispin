@@ -26,7 +26,9 @@ module Filispin
           raise 'unknown method'
       end
 
-      puts "#{@method} #{url} #{browser.current_page.code} #{time}\n"
+      # collect results
+      results = context[:results]
+      results.add @method, url, time, browser.current_page
     end
 
     protected

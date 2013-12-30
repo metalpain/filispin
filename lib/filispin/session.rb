@@ -18,38 +18,53 @@ module Filispin
     def run(context)
 
       threads = []
-      #results.start
+
+      results = initialize_results
+
+      session_context = {}
+      # TODO fill global parameters
+      session_context[:results] = results
+
+      results.start
 
       @users.times do |user|
         thread = Thread.new(user) do |user|
-          run_session_for_user(user, context)
+          run_session_for_user(user, session_context)
         end
         threads << thread
       end
 
       threads.each { |t| t.join }
 
-      #results.finish
-
-
+      results.finish
+      context[:results] << results
     end
 
     protected
 
+    def initialize_results
+      results = SessionResults.new @name
+      @scenarios.each do |scenario|
+        results << ScenarioResults.new(scenario.name)
+      end
+      results
+    end
+
     # run each of the concurrent sessions
     def run_session_for_user(user, context)
 
-      session_context = {}
-      session_context[:user] = user
-      session_context[:params] = {}
-      session_context[:browser] = Mechanize.new
+      local_context = {}
+      local_context[:results] = context[:results]
+      local_context[:user] = user
+      local_context[:params] = {}
+      local_context[:browser] = Mechanize.new
 
       # TODO set session variables
 
       @iterations.times do |iteration|
-        session_context[:iteration] = iteration
+        local_context[:iteration] = iteration
         @scenarios.each do |scenario|
-          scenario.run session_context
+          scenario.run local_context
         end
       end
     end
