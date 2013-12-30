@@ -8,6 +8,10 @@ module Filispin
       @options[:host] = host
     end
 
+    def think_time(think_time)
+      @options[:think_time] = think_time
+    end
+
     def log_requests(log_requests)
       @options[:log_requests] = log_requests
     end

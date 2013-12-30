@@ -13,9 +13,13 @@ module Filispin
     end
 
     def run(context)
+      options = context[:options]
       browser = context[:browser]
       parameters = process @parameters
-      url = url(@url, parameters, context[:options])
+      url = url(@url, parameters, options)
+
+      # think before request
+      sleep(options[:think_time]) if options[:think_time]
 
       case @method
         when :get
