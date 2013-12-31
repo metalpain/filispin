@@ -32,8 +32,14 @@ module Filispin
       case method
         when :get
           time = get(browser, url)
+        when :delete
+          time = post(browser, url, {_method: 'delete'})
         when :post
           time = post(browser, url, parameters)
+        when :path
+          time = post(browser, url, parameters.merge(_method: 'patch'))
+        when :put
+          time = post(browser, url, parameters.merge(_method: 'put'))
         else
           raise 'unknown method'
       end
@@ -59,8 +65,8 @@ module Filispin
     end
 
     def authenticity_token(page)
-      input = page.at("input[@name='authenticity_token']")
-      input.nil? ? nil : input['value']
+      matches = /content="(.+?)" name="csrf-token"/.match(page.body)
+      matches[1] if matches
     end
 
     def url(url, parameters, options)
