@@ -11,6 +11,7 @@ module Filispin
   autoload :Request, File.dirname(__FILE__) + '/filispin/operations/request'
   autoload :ThinkFor, File.dirname(__FILE__) + '/filispin/operations/think_for'
   autoload :Format, File.dirname(__FILE__) + '/filispin/util/format'
+  autoload :Parameters, File.dirname(__FILE__) + '/filispin/util/parameters'
   autoload :Progress, File.dirname(__FILE__) + '/filispin/util/progress'
   autoload :Stats, File.dirname(__FILE__) + '/filispin/util/stats'
   autoload :Timer, File.dirname(__FILE__) + '/filispin/util/timer'

@@ -6,6 +6,7 @@ module Filispin
       @scenarios = []
       @users = 1
       @iterations = 1
+      @params = {}
     end
 
     def users(users)
@@ -34,8 +35,12 @@ module Filispin
       end
     end
 
+    def params(params = nil, &block)
+      @params = params || block
+    end
+
     def build
-      Session.new @name, @users, @iterations, @scenarios
+      Session.new @name, @users, @iterations, @scenarios, @params
     end
 
   end

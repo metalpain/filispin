@@ -4,6 +4,7 @@ module Filispin
     def initialize(name)
       @operations = []
       @name = name
+      @params = {}
     end
 
     def think_for(seconds)
@@ -30,8 +31,12 @@ module Filispin
       @operations << Request.new(:put, url, params || block)
     end
 
+    def params(params = nil, &block)
+      @params = params || block
+    end
+
     def build
-      Scenario.new @name, @operations
+      Scenario.new @name, @operations, @params
     end
 
   end

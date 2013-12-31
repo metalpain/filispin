@@ -6,15 +6,17 @@ module Filispin
   # A session is the basic configuration for a filispin performance test.
   # It is made of several scenarios that will be run sequentially a given number of times or iterations.
   #
-  class Session < Scenario
+  class Session
+    include Parameters
 
     attr_reader :name, :users, :iterations, :scenarios
 
-    def initialize(name, users, iterations, scenarios)
+    def initialize(name, users, iterations, scenarios, params)
       @name = name
       @users = users
       @iterations = iterations
       @scenarios = scenarios
+      @params = params
     end
 
     def run(context)
@@ -22,6 +24,7 @@ module Filispin
       session_context = {}
       session_context[:options] = context[:options]
       # TODO fill global parameters
+      session_context[:params] = {}
 
       load = context[:options][:load]
       unless load.is_a? Array
@@ -74,14 +77,13 @@ module Filispin
     # run each of the concurrent sessions
     def run_session_for_user(user, context)
 
-      local_context = {}
-      local_context[:results] = context[:results]
-      local_context[:options] = context[:options]
-      local_context[:user] = user
-      local_context[:params] = {}
-      local_context[:browser] = Mechanize.new
-
-      # TODO set session variables
+      local_context = {
+        results: context[:results],
+        options: context[:options],
+        user: user,
+        params: merge_parameters(context[:params], @params),
+        browser: Mechanize.new
+      }
 
       @iterations.times do |iteration|
         local_context[:iteration] = iteration

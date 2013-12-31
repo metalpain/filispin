@@ -5,6 +5,7 @@ module Filispin
   #
   class Request
     include Timer
+    include Parameters
 
     def initialize(method, url, parameters = {})
       @method = method
@@ -15,14 +16,15 @@ module Filispin
     def run(context)
       options = context[:options]
       browser = context[:browser]
-      parameters = process @parameters
+      parameters = merge_parameters(context[:params], @parameters)
+      submit_parameters = process @parameters
       url = url(@url, parameters, options)
 
       # think before request
       sleep(options[:think_time]) if options[:think_time]
 
       # perform request
-      request @method, browser, url, parameters, context[:results]
+      request @method, browser, url, submit_parameters, context[:results]
     end
 
     protected
@@ -75,14 +77,6 @@ module Filispin
         "#{options[:host]}#{path}"
       else
         interpolate @url, parameters
-      end
-    end
-
-    def process(parameters)
-      if parameters.is_a? Proc
-        parameters.call
-      else
-        parameters
       end
     end
 
