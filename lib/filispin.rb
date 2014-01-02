@@ -6,7 +6,7 @@ module Filispin
   autoload :Block, File.dirname(__FILE__) + '/filispin/block'
   autoload :OnceBlock, File.dirname(__FILE__) + '/filispin/once_block'
   autoload :Results, File.dirname(__FILE__) + '/filispin/results'
-  autoload :LoadTestRunner, File.dirname(__FILE__) + '/filispin/load_test_runner'
+  autoload :Runner, File.dirname(__FILE__) + '/filispin/runner'
   autoload :Scenario, File.dirname(__FILE__) + '/filispin/scenario'
   autoload :Request, File.dirname(__FILE__) + '/filispin/operations/request'
   autoload :ThinkFor, File.dirname(__FILE__) + '/filispin/operations/think_for'
@@ -23,7 +23,11 @@ module Filispin
 
   def self.run_load_test(files)
     config = Config.load files
-    LoadTestRunner.new(config).run
+    Runner.new(config).run_load_test
   end
 
+  def self.run_stress_test(files)
+    config = Config.load files
+    Runner.new(config).run_stress_test
+  end
 end

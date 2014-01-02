@@ -22,8 +22,8 @@ module Filispin
 
     attr_reader :name, :users, :response_times, :errors
 
-    def initialize(scenario, users)
-      @name = scenario.name
+    def initialize(name, users)
+      @name = name
       @users = users
       @response_times = []
       @errors = 0

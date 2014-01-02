@@ -13,8 +13,36 @@ module Filispin
     end
 
     def run(context)
+      users = context[:options][:users]
 
-      local_context = {
+      scenario_context = {}
+      scenario_context[:options] = context[:options]
+      scenario_context[:params] = {} # TODO fill global parameters
+
+      results = ScenarioResults.new name, users
+      context[:results] << results
+      scenario_context[:results] = results
+
+      results.start
+
+      threads = []
+      users.times do
+        thread = Thread.new do
+          run_session scenario_context
+        end
+        threads << thread
+      end
+
+      threads.each { |t| t.join }
+
+      results.finish
+    end
+
+    protected
+
+    def run_session(context)
+
+      session_context = {
           results: context[:results],
           options: context[:options],
           params: merge_parameters(context[:params], @params),
@@ -23,12 +51,10 @@ module Filispin
 
       iterations = context[:options][:iterations]
       iterations.times do |iteration|
-        run_iteration iteration, local_context
+        run_iteration iteration, session_context
       end
 
     end
-
-    protected
 
     def run_iteration(iteration, context)
       context[:iteration] = iteration
