@@ -2,18 +2,18 @@ require 'docile'
 
 module Filispin
   class Config
-    attr_reader :options, :sessions
+    attr_reader :options, :scenarios
 
     def initialize
-      @sessions = []
+      @scenarios = []
     end
 
     def configuration(&block)
       @options = Docile.dsl_eval(GlobalConfig.new, &block).options
     end
 
-    def session(name, &block)
-      @sessions << Docile.dsl_eval(SessionBuilder.new(name), &block).build
+    def scenario(name, &block)
+      @scenarios << Docile.dsl_eval(ScenarioBuilder.new(name), &block).build
     end
 
     def self.load(files)

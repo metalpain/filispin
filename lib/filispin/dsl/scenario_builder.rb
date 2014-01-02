@@ -1,38 +1,13 @@
 module Filispin
-  class ScenarioBuilder
+  class ScenarioBuilder < BlockBuilder
 
     def initialize(name)
-      @operations = []
+      super()
       @name = name
-      @params = {}
     end
 
-    def think_for(seconds)
-      @operations << ThinkFor.new(seconds.to_f)
-    end
-
-    def get(url, &block)
-      @operations << Request.new(:get, url,  block || {})
-    end
-
-    def delete(url, &block)
-      @operations << Request.new(:delete, url,  block || {})
-    end
-
-    def post(url, params = nil, &block)
-      @operations << Request.new(:post, url, params || block)
-    end
-
-    def patch(url, params = nil, &block)
-      @operations << Request.new(:patch, url, params || block)
-    end
-
-    def put(url, params = nil, &block)
-      @operations << Request.new(:put, url, params || block)
-    end
-
-    def params(params = nil, &block)
-      @params = params || block
+    def auth(&block)
+      @operations << Docile.dsl_eval(OnceBlockBuilder.new, &block).build
     end
 
     def build

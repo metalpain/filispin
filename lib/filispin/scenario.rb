@@ -1,3 +1,5 @@
+require 'mechanize'
+
 module Filispin
   class Scenario
     include Parameters
@@ -12,18 +14,27 @@ module Filispin
 
     def run(context)
 
-      # TODO set scenario variables
       local_context = {
-        results: context[:results].scenario_results[@name],
-        browser: context[:browser],
-        options: context[:options],
-        params: merge_parameters(context[:params], @params)
+          results: context[:results],
+          options: context[:options],
+          params: merge_parameters(context[:params], @params),
+          browser: Mechanize.new
       }
 
-      @operations.each do |operation|
-        operation.run local_context
+      iterations = context[:options][:iterations]
+      iterations.times do |iteration|
+        run_iteration iteration, local_context
       end
+
     end
 
+    protected
+
+    def run_iteration(iteration, context)
+      context[:iteration] = iteration
+      @operations.each do |operation|
+        operation.run context
+      end
+    end
   end
 end

@@ -5,7 +5,8 @@ module Filispin
           host: 'http://localhost:3000',
           think_time: 1,
           response_threshold: {fast: 0.5, slow: 2},
-          load: 1,
+          users: 1,
+          iterations: 1,
       }
     end
 
@@ -21,8 +22,12 @@ module Filispin
       @options[:response_threshold] = {fast: fast, slow: slow}
     end
 
-    def load(load)
-      @options[:load] = load
+    def users(users)
+      @options[:users] = users
+    end
+
+    def iterations(iterations)
+      @options[:iterations] = iterations
     end
 
     def options

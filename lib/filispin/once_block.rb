@@ -1,5 +1,5 @@
 module Filispin
-  class AuthScenario < Scenario
+  class OnceBlock < Block
 
     def run(context)
       if context[:iteration] == 0

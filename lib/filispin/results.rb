@@ -1,31 +1,33 @@
 module Filispin
 
   class Results
-    attr_reader :session_results
+    attr_reader :scenario_results
 
     def initialize
-      @session_results = []
+      @scenario_results = []
     end
 
-    def <<(session_results)
-      @session_results << session_results
+    def <<(scenario_results)
+      @scenario_results << scenario_results
+    end
+
+    def current_scenario
+      @scenario_results.last
     end
 
   end
 
-  class SessionResults
+  class ScenarioResults
     include Stats
 
-    attr_reader :name, :users, :scenario_results
+    attr_reader :name, :users, :response_times, :errors
 
-    def initialize(name, users)
-      @name = name
+    def initialize(scenario, users)
+      @name = scenario.name
       @users = users
-      @scenario_results = {}
-    end
-
-    def <<(scenario_results)
-      @scenario_results[scenario_results.name] = scenario_results
+      @response_times = []
+      @errors = 0
+      @mutex = Mutex.new
     end
 
     def start
@@ -46,27 +48,6 @@ module Filispin
 
     def throughput
       number_of_requests.to_f / elapsed
-    end
-
-    def response_times
-      @scenario_results.values.map(&:response_times).flatten
-    end
-
-    def errors
-      @scenario_results.values.map(&:errors).reduce(:+)
-    end
-  end
-
-  class ScenarioResults
-    include Stats
-
-    attr_reader :name, :response_times, :errors
-
-    def initialize(name)
-      @name = name
-      @response_times = []
-      @errors = 0
-      @mutex = Mutex.new
     end
 
     def success(method, uri, time, page = nil)

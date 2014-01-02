@@ -4,8 +4,6 @@ module Filispin
 
     def initialize(results, context)
       @results = results
-      @context = context
-
       @fast_response = context[:options][:response_threshold][:fast]
       @slow_response = context[:options][:response_threshold][:slow]
     end
@@ -17,42 +15,46 @@ module Filispin
     def finish_report
       @printer.terminate
       @printer.join
-      print
+      print @results.current_scenario
+      printf "\n"
     end
 
     protected
 
     def continuous_print
+      printf bold(invert("%-20.20s%10.10s%12.12s%8.8s%8.8s%12.12s%12.12s%12.12s%12.12s%12.12s\n")),
+             'scenario', 'users', 'time', 'req', 'err', 'thr', 'max', 'min', 'avg', 'median'
+
+      last = @results.current_scenario
       while true
-        print
-        printf "\e[%dF", (5 + @results.scenario_results.size)
+        current = @results.current_scenario
+        if last != current
+          print last
+          printf "\n"
+          last = current
+        end
+
+        print current
         STDOUT.flush
         sleep 1.5
       end
     end
 
-    def print
-      printf bold(invert(" Session: %-55.55s    Users: %3d \n")), @results.name, @results.users
-      printf underline("%-20.20s%12.12s%12.12s%12.12s%12.12s%12.12s\n"), 'scenario', 'req', 'max', 'min', 'avg', 'median'
-      @results.scenario_results.values.each do |scenario|
-        printf '%-20.20s', scenario.name
-        print_results_line scenario
-        printf "\n"
-      end
-      printf '%-20.20s',  'Total'
-      print_results_line @results
-      printf "\n"
-
-      printf "Elapsed: %3d s. | ", @results.elapsed
-      printf "Req: %5d | ", @results.number_of_requests
-      printf "Throughput: %.2f req./s. | ", @results.throughput
-      printf "Errors: %5d | ", @results.errors
-      printf "\n"
-      printf "\n"
+    def print(results)
+      printf "\r"
+      printf '%-20.20s', results.name
+      printf '%10d', results.users
+      printf '%9d s.', results.elapsed
+      printf '%8d', results.number_of_requests
+      printf '%8d', results.errors
+      printf '%8.2f r/s', results.throughput
+      print_req_time results.max
+      print_req_time results.min
+      print_req_time results.mean
+      print_req_time results.median
     end
 
     def print_results_line(results)
-      printf '%12d', results.number_of_requests
       print_req_time results.max
       print_req_time results.min
       print_req_time results.mean
