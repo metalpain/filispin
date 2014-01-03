@@ -41,6 +41,8 @@ module Filispin
     end
 
     def print(results)
+      return unless results
+
       printf "\r"
       printf '%-20.20s', results.name
       printf '%10d', results.users
@@ -48,13 +50,6 @@ module Filispin
       printf '%8d', results.number_of_requests
       printf '%8d', results.errors
       printf '%8.2f r/s', results.throughput
-      print_req_time results.max
-      print_req_time results.min
-      print_req_time results.mean
-      print_req_time results.median
-    end
-
-    def print_results_line(results)
       print_req_time results.max
       print_req_time results.min
       print_req_time results.mean
